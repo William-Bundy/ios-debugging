@@ -9,8 +9,8 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewWillAppear(_ animated:Bool) {
+        super.viewWillAppear(animated)
         updateViews()
     }
     
@@ -66,12 +66,8 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
-    
+    var entry: Entry?
+
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!

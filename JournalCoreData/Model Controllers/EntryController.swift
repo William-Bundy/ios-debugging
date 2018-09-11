@@ -23,12 +23,13 @@ class EntryController {
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
-        entry.title = title
-        entry.bodyText = bodyText
-        entry.timestamp = Date()
-        entry.mood = mood
-        
+
+		let repr = EntryRepresentation(title: title,
+							bodyText: bodyText,
+							mood: mood,
+							timestamp: Date(),
+							identifier: entry.identifier)
+		update(entry: entry, with: repr)
         put(entry: entry)
         
         saveToPersistentStore()
@@ -163,11 +164,17 @@ class EntryController {
     }
     
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
-        entry.title = entryRep.title
-        entry.bodyText = entryRep.bodyText
-        entry.mood = entryRep.mood
-        entry.timestamp = entryRep.timestamp
-        entry.identifier = entryRep.identifier
+		guard let moc = entry.managedObjectContext else {
+			NSLog("Somehow we got an entry without a moc")
+			return
+		}
+		moc.performAndWait {
+			entry.title = entryRep.title
+			entry.bodyText = entryRep.bodyText
+			entry.mood = entryRep.mood
+			entry.timestamp = entryRep.timestamp
+			entry.identifier = entryRep.identifier
+		}
     }
     
     func saveToPersistentStore() {        
